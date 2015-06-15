@@ -145,8 +145,8 @@ void CDataProcess::ProcessSrc(stWP_K_3D_Object* in3DObj)
       pOut01 = cvCreateImage(size, 8, 3);
 		pCannyImg1 = cvCreateImage(size, 8, 3);
 
-		/*showxy_msy = cvCreateImage(size, 8, 3);
-		showxz_msy = cvCreateImage(size, 8, 3);*/
+		showxy_msy = cvCreateImage(size, 8, 3);
+		showxz_msy = cvCreateImage(size, 8, 3);
 		//cvNamedWindow("pOut01", 0);
 		
 		a = 1;
@@ -190,10 +190,10 @@ void CDataProcess::ProcessSrc(stWP_K_3D_Object* in3DObj)
 		SYSTEMTIME sys1; GetLocalTime(&sys1);
 		bool_max_connectivity_analyze2_1_OBJ();
         SYSTEMTIME sys2; GetLocalTime(&sys2);
-		CString s1;
+		/*CString s1;
 	
 		s1.Format(_T("%d"), sys2.wMilliseconds - sys1.wMilliseconds);
-		AfxMessageBox(s1);
+		AfxMessageBox(s1);*/
 		
 		cvShowImage("win02", pOut02);
 		cvWaitKey(10);
