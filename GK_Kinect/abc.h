@@ -116,8 +116,8 @@ long int bool_max_connectivity_analyze2_1_OBJ()
 
 
 	int Z_min_diff = Z_min_diff_set;//50;	//这是一个可调值关系到深度的分辨粗略程度
-	const char X_step = 2;		//像素点的步长 隔点扫描 用于减少运算量
-	const char Y_step = 2;		//像素点的步长 隔点扫描 用于减少运算量
+	const char X_step = 1;// 2;		//像素点的步长 隔点扫描 用于减少运算量
+	const char Y_step = 1;// 2;		//像素点的步长 隔点扫描 用于减少运算量
 
 
 	const int x320 = DEPTH_VISION_CAM_WIDTH;//320;//320;//处理图像数据的大小设置  x值必须和原数据相同否则出现 行错误 
@@ -366,7 +366,7 @@ long int bool_max_connectivity_analyze2_1_OBJ()
 					{
 						//	if ((connect_area_s_e_w[j][1] - connect_area_s_e_w[j][0])> 100 && (connect_area_s_e_w[j][1] - connect_area_s_e_w[j][0])<3300)
 						//if ((connect_area_s_e_w[j][1] - connect_area_s_e_w[j][0]) > 100 && (connect_area_s_e_w[j][1] - connect_area_s_e_w[j][0]) < 3300)
-							if ((connect_area_s_e_w[j][1] - connect_area_s_e_w[j][0]) > 100 && (connect_area_s_e_w[j][1] - connect_area_s_e_w[j][0]) <3300)
+							if ((connect_area_s_e_w[j][1] - connect_area_s_e_w[j][0]) > 60 && (connect_area_s_e_w[j][1] - connect_area_s_e_w[j][0]) <3300)
 							//联通域大小筛选   100<  <3300
 						{	////////此处参数可调(联通)
 
@@ -420,16 +420,19 @@ long int bool_max_connectivity_analyze2_1_OBJ()
 							//if ((((float)(weight_msy / (float)connect_area_s_e_w[j][2])*sqrt((connect_area_s_e_w[j][2] * X_step*Y_step)))>90000) && (((float)(weight_msy / (float)connect_area_s_e_w[j][2])*sqrt((connect_area_s_e_w[j][2] * X_step*Y_step)))<110000))
 
 							//if ((fabs(P_xy - 1) < 1 * 0.15) && (fabs(P_area - 0.7854) < 0.7854*0.15) && (((float)(weight_msy / (float)connect_area_s_e_w[j][2])*sqrt((connect_area_s_e_w[j][2] * X_step*Y_step))) > 90000) && (((float)(weight_msy / (float)connect_area_s_e_w[j][2])*sqrt((connect_area_s_e_w[j][2] * X_step*Y_step))) < 110000))
-							/*	if ((fabs(P_xy - 1) < 1 * 0.15) && (fabs(P_area - 0.7854) < 0.7854*0.15) && (((float)(weight_msy / (float)connect_area_s_e_w[j][2])*sqrt((connect_area_s_e_w[j][2] * X_step*Y_step))) > 90000/4) && (((float)(weight_msy / (float)connect_area_s_e_w[j][2])*sqrt((connect_area_s_e_w[j][2] * X_step*Y_step))) < 110000/4))
-							{	*///圆的长宽比为1  圆的面积与外接最小矩型面积比为 2*r*2*r/Pi*r*r =4/pi 					
+							//	if ((fabs(P_xy - 1) < 1 * 0.15) && (fabs(P_area - 0.7854) < 0.7854*0.15) )//&& (((float)(weight_msy / (float)connect_area_s_e_w[j][2])*sqrt((connect_area_s_e_w[j][2] * X_step*Y_step))) > 90000) && (((float)(weight_msy / (float)connect_area_s_e_w[j][2])*sqrt((connect_area_s_e_w[j][2] * X_step*Y_step))) < 110000))
+							//if (fabs(P_xy - 1) < 1 * 0.15) && (fabs(P_area - 0.7854) < 0.7854*0.15))//&& (((float)(weight_msy / (float)connect_area_s_e_w[j][2])*sqrt((connect_area_s_e_w[j][2] * X_step*Y_step))) > 90000) && (((float)(weight_msy / (float)connect_area_s_e_w[j][2])*sqrt((connect_area_s_e_w[j][2] * X_step*Y_step))) < 110000))
+							if ((fabs(P_xy - 1) < 1 * 0.21) && (fabs(P_area - 0.7854) < 0.7854*0.19))//&& (((float)(weight_msy / (float)connect_area_s_e_w[j][2])*sqrt((connect_area_s_e_w[j][2] * X_step*Y_step))) > 90000) && (((float)(weight_msy / (float)connect_area_s_e_w[j][2])*sqrt((connect_area_s_e_w[j][2] * X_step*Y_step))) < 110000))
+								{	//圆的长宽比为1  圆的面积与外接最小矩型面积比为 2*r*2*r/Pi*r*r =4/pi 					
 								//cout << "长宽比" << P_xy << " 面积比" << P_area << " 实际面积 " << connect_area_s_e_w[j][2] * X_step*Y_step << "中心点距离" << DepthBuf_O_msy[(max_y + min_y)/2][(max_x + min_x) / 2] << endl;
 								/////////////////////////////////////////////////////以上内容输出长宽比，面积比，实际面积，中心距离////////////////////////////
 
 								for (i = connect_area_s_e_w[j][0]; i < connect_area_s_e_w[j][1]; i++)
 								{
+									DrawPoint(area_grow_data_obj[i][1], area_grow_data_obj[i][0], R, G, 0, pOut02);//SetColor(y,x,cPoint);//测试代码
 									if (area_grow_data_obj[i][1] % 2 == 0 && area_grow_data_obj[i][0] % 2 == 0)
 									{
-										DrawPoint(area_grow_data_obj[i][1], area_grow_data_obj[i][0], R, G, 0, pOut02);//SetColor(y,x,cPoint);//测试代码
+										
 										//dataShow[area_grow_data_obj[i][0] * 320 * 3 + area_grow_data_obj[i][1] * 3] = 0xff;
 
 										dataShow[((240-area_grow_data_obj[i][0] / 2) * 320 + area_grow_data_obj[i][1] / 2) * 3] = R;
@@ -443,21 +446,21 @@ long int bool_max_connectivity_analyze2_1_OBJ()
 									}
 								}
 								///////////////////////////////把坐标等标记在图上MSY///////////////////////////////////////////
-								//								CvFont font;
-								//								cvInitFont(&font, 5,
-								//									0.6f, 0.6f,
-								//									0, 1, CV_AA);
-								//								sprintf(str, "P_area %.3f ", P_area);
-								//								cvPutText(pOut01, str, cvPoint(min_x + 10, min_y + 10), &font, CV_RGB(255, 255, 255));
-								//								sprintf(str, "length-width ratio  %.3f  ", P_xy);
-								//								cvPutText(pOut01, str, cvPoint(min_x + 10, min_y + 30), &font, CV_RGB(255, 255, 255));
+																CvFont font;
+																cvInitFont(&font, 5,
+																	0.6f, 0.6f,
+																	0, 1, CV_AA);
+																sprintf(str, "P_a %.3f ", P_area);
+																cvPutText(pOut02, str, cvPoint(min_x + 10, min_y + 10), &font, CV_RGB(255, 255, 255));
+																sprintf(str, "ra  %.3f  ", P_xy);
+																cvPutText(pOut02, str, cvPoint(min_x + 10, min_y + 30), &font, CV_RGB(255, 255, 255));
 								//								sprintf(str, "  Figure area  %d  ", connect_area_s_e_w[j][2] * X_step*Y_step);
-								//								cvPutText(pOut01, str, cvPoint(min_x + 10, min_y + 50), &font, CV_RGB(255, 255, 255));
+								//								cvPutText(pOut02, str, cvPoint(min_x + 10, min_y + 50), &font, CV_RGB(255, 255, 255));
 								//								sprintf(str, "  depth  %f  ", weight_msy / (float)connect_area_s_e_w[j][2]);// DepthBuf_O_msy[(int)Yc][(int)Xc]);
-								//								cvPutText(pOut01, str, cvPoint(min_x + 10, min_y + 70), &font, CV_RGB(255, 255, 255));
+								//								cvPutText(pOut02, str, cvPoint(min_x + 10, min_y + 70), &font, CV_RGB(255, 255, 255));
 								////								sprintf(str, "  end  %f  ", weight_msy / (float)connect_area_s_e_w[j][2] / (sqrt(connect_area_s_e_w[j][2] * X_step*Y_step)));// DepthBuf_O_msy[(int)Yc][(int)Xc]);
 								//								sprintf(str, "  end  %f  ", weight_msy / (float)((float)connect_area_s_e_w[j][2])* sqrt((connect_area_s_e_w[j][2] * X_step*Y_step)));// DepthBuf_O_msy[(int)Yc][(int)Xc]);
-								//								cvPutText(pOut01, str, cvPoint(min_x + 10, min_y + 90), &font, CV_RGB(255, 255, 255));
+								//								cvPutText(pOut02, str, cvPoint(min_x + 10, min_y + 90), &font, CV_RGB(255, 255, 255));
 								//////////////////////////////////////////////////////////////MSY TEST////////////////////////////
 								/*	CvPoint   centerpointxy;
 									centerpointxy.x = (int)Xc;
@@ -478,7 +481,7 @@ long int bool_max_connectivity_analyze2_1_OBJ()
 								{
 								weight_msy / (float)((float)connect_area_s_e_w[j][2])*sqrt((connect_area_s_e_w[j][2] * X_step*Y_step)
 								}*/
-								/*}*/
+								}
 							
 						}
 					

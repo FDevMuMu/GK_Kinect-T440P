@@ -1,0 +1,20 @@
+	//********************
+	//********************测试时间的起始点
+	LARGE_INTEGER Frequency,CountEnd,CountStart; 
+	QueryPerformanceFrequency(&Frequency); 
+	QueryPerformanceCounter(&CountStart); 
+	double dfElapseMS=0; 
+	double dfElapseMS1=0;
+	double dfElapseMS2=0; 
+	double dfElapseMS3=0;  
+
+
+	//****************************************************************************************************
+	QueryPerformanceCounter(&CountEnd); 
+	dfElapseMS=(double)((double)(CountEnd.QuadPart-CountStart.QuadPart+10)/(double)Frequency.QuadPart)*1000.0; 
+	//****************************************************************************************************第一个时间节点
+
+	//****************************************************************************************************	QueryPerformanceCounter(&CountEnd); 
+	QueryPerformanceCounter(&CountEnd); 
+	dfElapseMS1=(double)((double)(CountEnd.QuadPart-CountStart.QuadPart+10)/(double)Frequency.QuadPart)*1000.0-dfElapseMS; 
+	//****************************************************************************************************第二个时间节点
