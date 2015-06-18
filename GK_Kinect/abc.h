@@ -116,8 +116,8 @@ long int bool_max_connectivity_analyze2_1_OBJ()
 
 
 	int Z_min_diff = Z_min_diff_set;//50;	//这是一个可调值关系到深度的分辨粗略程度
-	const char X_step = 1;// 2;		//像素点的步长 隔点扫描 用于减少运算量
-	const char Y_step = 1;// 2;		//像素点的步长 隔点扫描 用于减少运算量
+	const char X_step = 2;		//像素点的步长 隔点扫描 用于减少运算量
+	const char Y_step = 2;		//像素点的步长 隔点扫描 用于减少运算量
 
 
 	const int x320 = DEPTH_VISION_CAM_WIDTH;//320;//320;//处理图像数据的大小设置  x值必须和原数据相同否则出现 行错误 

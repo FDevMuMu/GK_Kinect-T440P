@@ -187,13 +187,39 @@ void CDataProcess::ProcessSrc(stWP_K_3D_Object* in3DObj)
 			}
 		}
 		
-		SYSTEMTIME sys1; GetLocalTime(&sys1);
+		//SYSTEMTIME sys1; GetLocalTime(&sys1);
+		//********************
+		//********************测试时间的起始点
+		LARGE_INTEGER Frequency, CountEnd, CountStart;
+		QueryPerformanceFrequency(&Frequency);
+		QueryPerformanceCounter(&CountStart);
+		double dfElapseMS = 0;
+		double dfElapseMS1 = 0;
+		double dfElapseMS2 = 0;
+		double dfElapseMS3 = 0;
+
+
+
+
+
+
 		bool_max_connectivity_analyze2_1_OBJ();
-        SYSTEMTIME sys2; GetLocalTime(&sys2);
-		/*CString s1;
+
+		//****************************************************************************************************
+		QueryPerformanceCounter(&CountEnd);
+		dfElapseMS = (double)((double)(CountEnd.QuadPart - CountStart.QuadPart + 10) / (double)Frequency.QuadPart)*1000.0;
+		//****************************************************************************************************第一个时间节点
+
+
+
+
+
+       // SYSTEMTIME sys2; GetLocalTime(&sys2);
+		
+		CString s1;
 	
-		s1.Format(_T("%d"), sys2.wMilliseconds - sys1.wMilliseconds);
-		AfxMessageBox(s1);*/
+		s1.Format(_T("%f"), dfElapseMS);
+		AfxMessageBox(s1);
 		
 		cvShowImage("win02", pOut02);
 		cvWaitKey(10);
