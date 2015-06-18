@@ -135,7 +135,7 @@ void CDataProcess::ProcessSrc(stWP_K_3D_Object* in3DObj)
 {
 	if (a == 0)
 	{
-		cvNamedWindow("win02", 0);
+		//cvNamedWindow("win02", 0);
 		CvSize size; //=  cvGetSize(BGR);//得到摄像头图像大小
 		size.height = 480;
 		size.width = 640;
@@ -221,8 +221,8 @@ void CDataProcess::ProcessSrc(stWP_K_3D_Object* in3DObj)
 		s1.Format(_T("%f"), dfElapseMS);
 		AfxMessageBox(s1);
 		
-		cvShowImage("win02", pOut02);
-		cvWaitKey(10);
+		//cvShowImage("win02", pOut02);
+		//cvWaitKey(10);
 
 	/*	int x, y;
 	

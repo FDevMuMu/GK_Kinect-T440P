@@ -343,19 +343,19 @@ long int bool_max_connectivity_analyze2_1_OBJ()
 			{
 				register int   min_x, max_x, min_y, max_y;
 				i = 1;
-				clean(pOut01);//清理两个图
-				clean(pOut02);
+				//clean(pOut01);//清理两个图
+				//clean(pOut02);
 				////////清理右上角的黑图
-				int x, y;
-				for (x = 0; x < 320; x++)
-				{
-					for (y = 0; y < 240; y++)
-					{
-						dataShow[(y * 320 + x) * 3] = 0;
-						dataShow[(y * 320 + x) * 3 + 1] = 0;
-						dataShow[(y * 320 + x) * 3 + 2] = 0;
-					}
-				}
+				//int x, y;
+				//for (x = 0; x < 320; x++)
+				//{
+				//	for (y = 0; y < 240; y++)
+				//	{
+				//		dataShow[(y * 320 + x) * 3] = 0;
+				//		dataShow[(y * 320 + x) * 3 + 1] = 0;
+				//		dataShow[(y * 320 + x) * 3 + 2] = 0;
+				//	}
+				//}
 			  ///////////
 				for (j = 2; j <= connect_area_num; j++)//j 连通域的个数
 				{
@@ -429,31 +429,34 @@ long int bool_max_connectivity_analyze2_1_OBJ()
 
 								for (i = connect_area_s_e_w[j][0]; i < connect_area_s_e_w[j][1]; i++)
 								{
-									DrawPoint(area_grow_data_obj[i][1], area_grow_data_obj[i][0], R, G, 0, pOut02);//SetColor(y,x,cPoint);//测试代码
-									if (area_grow_data_obj[i][1] % 2 == 0 && area_grow_data_obj[i][0] % 2 == 0)
-									{
-										
-										//dataShow[area_grow_data_obj[i][0] * 320 * 3 + area_grow_data_obj[i][1] * 3] = 0xff;
+									//DrawPoint(area_grow_data_obj[i][1], area_grow_data_obj[i][0], R, G, 0, pOut02);//SetColor(y,x,cPoint);//测试代码
+									//if (area_grow_data_obj[i][1] % 2 == 0 && area_grow_data_obj[i][0] % 2 == 0)
+									//{
+									//	
+									//	//dataShow[area_grow_data_obj[i][0] * 320 * 3 + area_grow_data_obj[i][1] * 3] = 0xff;
 
-										dataShow[((240-area_grow_data_obj[i][0] / 2) * 320 + area_grow_data_obj[i][1] / 2) * 3] = R;
-										dataShow[((240 - area_grow_data_obj[i][0] / 2) * 320 + area_grow_data_obj[i][1] / 2) * 3 + 1] = G;
-										dataShow[((240 - area_grow_data_obj[i][0] / 2) * 320 + area_grow_data_obj[i][1] / 2) * 3 + 2] = B;
+									//	dataShow[((240-area_grow_data_obj[i][0] / 2) * 320 + area_grow_data_obj[i][1] / 2) * 3] = R;
+									//	dataShow[((240 - area_grow_data_obj[i][0] / 2) * 320 + area_grow_data_obj[i][1] / 2) * 3 + 1] = G;
+									//	dataShow[((240 - area_grow_data_obj[i][0] / 2) * 320 + area_grow_data_obj[i][1] / 2) * 3 + 2] = B;
 
 
 
 
 										center = (max_x + min_x) / 2 + (max_y + min_y) * 320;
-									}
+									/*}*/
 								}
 								///////////////////////////////把坐标等标记在图上MSY///////////////////////////////////////////
-																CvFont font;
+												/*				CvFont font;
 																cvInitFont(&font, 5,
 																	0.6f, 0.6f,
 																	0, 1, CV_AA);
 																sprintf(str, "P_a %.3f ", P_area);
 																cvPutText(pOut02, str, cvPoint(min_x + 10, min_y + 10), &font, CV_RGB(255, 255, 255));
 																sprintf(str, "ra  %.3f  ", P_xy);
-																cvPutText(pOut02, str, cvPoint(min_x + 10, min_y + 30), &font, CV_RGB(255, 255, 255));
+																cvPutText(pOut02, str, cvPoint(min_x + 10, min_y + 30), &font, CV_RGB(255, 255, 255));*/
+
+
+
 								//								sprintf(str, "  Figure area  %d  ", connect_area_s_e_w[j][2] * X_step*Y_step);
 								//								cvPutText(pOut02, str, cvPoint(min_x + 10, min_y + 50), &font, CV_RGB(255, 255, 255));
 								//								sprintf(str, "  depth  %f  ", weight_msy / (float)connect_area_s_e_w[j][2]);// DepthBuf_O_msy[(int)Yc][(int)Xc]);
