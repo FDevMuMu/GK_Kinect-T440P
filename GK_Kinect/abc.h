@@ -25,9 +25,14 @@ float AXc = 0, AYc = 0, Xc = 0, Yc = 0, weight_msy= 0;//////Ã¿¸öXÓë´ËµãÖÊÁ¿µÄ³Ë»
 extern long int center_msy;//abc.hÖĞ·µ»ØµÄcenter,±íÊ¾£¨x,y)ÄÇµã¶ÔÓ¦ÔÚ¾ØÕóÀïµÄÎ»ÖÃ
 //extern const openni::DepthPixel* pDepth;
 char str[50];
+extern int pointx;
+extern int pointy;
 /////////////////////////////////MSY TEST////////////////////////////
 extern IplImage *showxy_msy;
 extern IplImage *showxz_msy;
+int pointxy = 1;
+//extern int showphoto_msy;
+//#define showphoto_msy//²âÊÔÊ±ÏÔÊ¾Á¬Í¨ÓòµÄ²¿·Ö,¶¨Òå±íÊ¾¹Ø±Õ,×¢ÊÍµô±íÊ¾¿ªÆô//¿ªÆôÊ±·Ç³£ÀË·ÑÊ±¼ä,´óÔ¼6ms´¦ÀíÒ»Ö¡,¹Ø±ÕÊ±Ö»Ğè0.5ms
 void DrawPoint(int x, int y, unsigned char R, unsigned char G, unsigned char B, IplImage *img)
 {
 	if (x>img->width)		x = img->width;
@@ -103,11 +108,20 @@ void clean(IplImage *img)
 }
 
 
-
-
+int x=0, y=0;
+//VOID TEST()
+//{
+//	x++;
+//	if (x > 200)
+//		x = 0;
+//	DrawPoint(x, 100, 255, 0, 0, pOut02);
+//
+//}
 
 long int bool_max_connectivity_analyze2_1_OBJ()
 {
+	/*TEST();*/
+	/*return 1;*/
 	long int center = 0;
 
 	register unsigned long int  boolset = 3000;//ãĞÖµ
@@ -116,8 +130,8 @@ long int bool_max_connectivity_analyze2_1_OBJ()
 
 
 	int Z_min_diff = Z_min_diff_set;//50;	//ÕâÊÇÒ»¸ö¿Éµ÷Öµ¹ØÏµµ½Éî¶ÈµÄ·Ö±æ´ÖÂÔ³Ì¶È
-	const char X_step = 2;		//ÏñËØµãµÄ²½³¤ ¸ôµãÉ¨Ãè ÓÃÓÚ¼õÉÙÔËËãÁ¿
-	const char Y_step = 2;		//ÏñËØµãµÄ²½³¤ ¸ôµãÉ¨Ãè ÓÃÓÚ¼õÉÙÔËËãÁ¿
+	const char X_step = 1;		//ÏñËØµãµÄ²½³¤ ¸ôµãÉ¨Ãè ÓÃÓÚ¼õÉÙÔËËãÁ¿
+	const char Y_step = 1;		//ÏñËØµãµÄ²½³¤ ¸ôµãÉ¨Ãè ÓÃÓÚ¼õÉÙÔËËãÁ¿
 
 
 	const int x320 = DEPTH_VISION_CAM_WIDTH;//320;//320;//´¦ÀíÍ¼ÏñÊı¾İµÄ´óĞ¡ÉèÖÃ  xÖµ±ØĞëºÍÔ­Êı¾İÏàÍ¬·ñÔò³öÏÖ ĞĞ´íÎó 
@@ -337,26 +351,34 @@ long int bool_max_connectivity_analyze2_1_OBJ()
 			int t;
 			unsigned char R, G, B;
 
+			int maosdisplaynumber = -DepthBuf_O[pointy][pointx];
 
 
 			if (1)//ËùÓĞÁ¬Í¨Óò Öğ¸öÏÔÊ¾
 			{
 				register int   min_x, max_x, min_y, max_y;
 				i = 1;
-				//clean(pOut01);//ÇåÀíÁ½¸öÍ¼
-				//clean(pOut02);
-				////////ÇåÀíÓÒÉÏ½ÇµÄºÚÍ¼
-				//int x, y;
-				//for (x = 0; x < 320; x++)
-				//{
-				//	for (y = 0; y < 240; y++)
-				//	{
-				//		dataShow[(y * 320 + x) * 3] = 0;
-				//		dataShow[(y * 320 + x) * 3 + 1] = 0;
-				//		dataShow[(y * 320 + x) * 3 + 2] = 0;
-				//	}
-				//}
-			  ///////////
+#ifndef showphoto_msy
+					clean(pOut01);//ÇåÀíÁ½¸öÍ¼
+					clean(pOut02);
+					//////ÇåÀíÓÒÉÏ½ÇµÄºÚÍ¼
+					int x, y;
+					for (x = 0; x < 320; x++)
+					{
+						for (y = 0; y < 240; y++)
+						{
+							dataShow[(y * 320 + x) * 3] = 0;
+							dataShow[(y * 320 + x) * 3 + 1] = 0;
+							dataShow[(y * 320 + x) * 3 + 2] = 0;
+						}
+					}
+#endif
+			  /////////
+
+
+
+
+
 				for (j = 2; j <= connect_area_num; j++)//j Á¬Í¨ÓòµÄ¸öÊı
 				{
 					R = (i * 90 % 200) + 40;
@@ -422,47 +444,59 @@ long int bool_max_connectivity_analyze2_1_OBJ()
 							//if ((fabs(P_xy - 1) < 1 * 0.15) && (fabs(P_area - 0.7854) < 0.7854*0.15) && (((float)(weight_msy / (float)connect_area_s_e_w[j][2])*sqrt((connect_area_s_e_w[j][2] * X_step*Y_step))) > 90000) && (((float)(weight_msy / (float)connect_area_s_e_w[j][2])*sqrt((connect_area_s_e_w[j][2] * X_step*Y_step))) < 110000))
 							//	if ((fabs(P_xy - 1) < 1 * 0.15) && (fabs(P_area - 0.7854) < 0.7854*0.15) )//&& (((float)(weight_msy / (float)connect_area_s_e_w[j][2])*sqrt((connect_area_s_e_w[j][2] * X_step*Y_step))) > 90000) && (((float)(weight_msy / (float)connect_area_s_e_w[j][2])*sqrt((connect_area_s_e_w[j][2] * X_step*Y_step))) < 110000))
 							//if (fabs(P_xy - 1) < 1 * 0.15) && (fabs(P_area - 0.7854) < 0.7854*0.15))//&& (((float)(weight_msy / (float)connect_area_s_e_w[j][2])*sqrt((connect_area_s_e_w[j][2] * X_step*Y_step))) > 90000) && (((float)(weight_msy / (float)connect_area_s_e_w[j][2])*sqrt((connect_area_s_e_w[j][2] * X_step*Y_step))) < 110000))
-							if ((fabs(P_xy - 1) < 1 * 0.21) && (fabs(P_area - 0.7854) < 0.7854*0.19))//&& (((float)(weight_msy / (float)connect_area_s_e_w[j][2])*sqrt((connect_area_s_e_w[j][2] * X_step*Y_step))) > 90000) && (((float)(weight_msy / (float)connect_area_s_e_w[j][2])*sqrt((connect_area_s_e_w[j][2] * X_step*Y_step))) < 110000))
-								{	//Ô²µÄ³¤¿í±ÈÎª1  Ô²µÄÃæ»ıÓëÍâ½Ó×îĞ¡¾ØĞÍÃæ»ı±ÈÎª 2*r*2*r/Pi*r*r =4/pi 					
+			//				if ((fabs(P_xy - 1) < 1 * 0.21) && (fabs(P_area - 0.7854) < 0.7854*0.19)&& (((float)(weight_msy / (float)connect_area_s_e_w[j][2])*sqrt((connect_area_s_e_w[j][2] * X_step*Y_step))) > 60000) && (((float)(weight_msy / (float)connect_area_s_e_w[j][2])*sqrt((connect_area_s_e_w[j][2] * X_step*Y_step))) < 70000))
+								//{	//Ô²µÄ³¤¿í±ÈÎª1  Ô²µÄÃæ»ıÓëÍâ½Ó×îĞ¡¾ØĞÍÃæ»ı±ÈÎª 2*r*2*r/Pi*r*r =4/pi 					
 								//cout << "³¤¿í±È" << P_xy << " Ãæ»ı±È" << P_area << " Êµ¼ÊÃæ»ı " << connect_area_s_e_w[j][2] * X_step*Y_step << "ÖĞĞÄµã¾àÀë" << DepthBuf_O_msy[(max_y + min_y)/2][(max_x + min_x) / 2] << endl;
 								/////////////////////////////////////////////////////ÒÔÉÏÄÚÈİÊä³ö³¤¿í±È£¬Ãæ»ı±È£¬Êµ¼ÊÃæ»ı£¬ÖĞĞÄ¾àÀë////////////////////////////
-
+							if (1)//j == maosdisplaynumber)
+							{
 								for (i = connect_area_s_e_w[j][0]; i < connect_area_s_e_w[j][1]; i++)
 								{
-									//DrawPoint(area_grow_data_obj[i][1], area_grow_data_obj[i][0], R, G, 0, pOut02);//SetColor(y,x,cPoint);//²âÊÔ´úÂë
-									//if (area_grow_data_obj[i][1] % 2 == 0 && area_grow_data_obj[i][0] % 2 == 0)
-									//{
-									//	
-									//	//dataShow[area_grow_data_obj[i][0] * 320 * 3 + area_grow_data_obj[i][1] * 3] = 0xff;
-
-									//	dataShow[((240-area_grow_data_obj[i][0] / 2) * 320 + area_grow_data_obj[i][1] / 2) * 3] = R;
-									//	dataShow[((240 - area_grow_data_obj[i][0] / 2) * 320 + area_grow_data_obj[i][1] / 2) * 3 + 1] = G;
-									//	dataShow[((240 - area_grow_data_obj[i][0] / 2) * 320 + area_grow_data_obj[i][1] / 2) * 3 + 2] = B;
 
 
+									/*if (pointx<max_x&&pointx>min_x&&pointy<max_y&&pointy>min_y)
+									{*/
+#ifndef showphoto_msy
+										DrawPoint(area_grow_data_obj[i][1], area_grow_data_obj[i][0], R, G, 0, pOut02);//SetColor(y,x,cPoint);//²âÊÔ´úÂë
+										if (area_grow_data_obj[i][1] % 2 == 0 && area_grow_data_obj[i][0] % 2 == 0)
+										{
+											//dataShow[area_grow_data_obj[i][0] * 320 * 3 + area_grow_data_obj[i][1] * 3] = 0xff;
+
+											dataShow[((240 - area_grow_data_obj[i][0] / 2) * 320 + area_grow_data_obj[i][1] / 2) * 3] = R;
+											dataShow[((240 - area_grow_data_obj[i][0] / 2) * 320 + area_grow_data_obj[i][1] / 2) * 3 + 1] = G;
+											dataShow[((240 - area_grow_data_obj[i][0] / 2) * 320 + area_grow_data_obj[i][1] / 2) * 3 + 2] = B;
+										}
+#endif
+									}
 
 
-										center = (max_x + min_x) / 2 + (max_y + min_y) * 320;
+
+
+									center = (max_x + min_x) / 2 + (max_y + min_y) * 320;
 									/*}*/
-								}
+								/*}*/
+							}
 								///////////////////////////////°Ñ×ø±êµÈ±ê¼ÇÔÚÍ¼ÉÏMSY///////////////////////////////////////////
-												/*				CvFont font;
-																cvInitFont(&font, 5,
-																	0.6f, 0.6f,
-																	0, 1, CV_AA);
-																sprintf(str, "P_a %.3f ", P_area);
-																cvPutText(pOut02, str, cvPoint(min_x + 10, min_y + 10), &font, CV_RGB(255, 255, 255));
-																sprintf(str, "ra  %.3f  ", P_xy);
-																cvPutText(pOut02, str, cvPoint(min_x + 10, min_y + 30), &font, CV_RGB(255, 255, 255));*/
+							if (j == maosdisplaynumber)
+							{
+								CvFont font;
+								cvInitFont(&font, 5,0.6f, 0.6f,0, 1, CV_AA);
+									
+								sprintf(str, "P_a %.3f ", P_area);
+								cvPutText(pOut02, str, cvPoint(min_x + 10, min_y + 10), &font, CV_RGB(255, 255, 255));
+								sprintf(str, "ra  %.3f  ", P_xy);
+								cvPutText(pOut02, str, cvPoint(min_x + 10, min_y + 30), &font, CV_RGB(255, 255, 255));
+								sprintf(str, "  end  %f  ",  ((float)(weight_msy / (float)connect_area_s_e_w[j][2])*sqrt((connect_area_s_e_w[j][2] * X_step*Y_step))));// DepthBuf_O_msy[(int)Yc][(int)Xc]);
+								cvPutText(pOut02, str, cvPoint(min_x + 10, min_y + 50), &font, CV_RGB(255, 255, 255));
+							}
+								//								sprintf(str, "  end  %f  ", weight_msy / (float)((float)connect_area_s_e_w[j][2])* sqrt((connect_area_s_e_w[j][2] * X_step*Y_step)));// DepthBuf_O_msy[(int)Yc][(int)Xc]);
 
-
-
+/*
 								//								sprintf(str, "  Figure area  %d  ", connect_area_s_e_w[j][2] * X_step*Y_step);
-								//								cvPutText(pOut02, str, cvPoint(min_x + 10, min_y + 50), &font, CV_RGB(255, 255, 255));
+								//								
 								//								sprintf(str, "  depth  %f  ", weight_msy / (float)connect_area_s_e_w[j][2]);// DepthBuf_O_msy[(int)Yc][(int)Xc]);
 								//								cvPutText(pOut02, str, cvPoint(min_x + 10, min_y + 70), &font, CV_RGB(255, 255, 255));
-								////								sprintf(str, "  end  %f  ", weight_msy / (float)connect_area_s_e_w[j][2] / (sqrt(connect_area_s_e_w[j][2] * X_step*Y_step)));// DepthBuf_O_msy[(int)Yc][(int)Xc]);
-								//								sprintf(str, "  end  %f  ", weight_msy / (float)((float)connect_area_s_e_w[j][2])* sqrt((connect_area_s_e_w[j][2] * X_step*Y_step)));// DepthBuf_O_msy[(int)Yc][(int)Xc]);
+								////								
 								//								cvPutText(pOut02, str, cvPoint(min_x + 10, min_y + 90), &font, CV_RGB(255, 255, 255));
 								//////////////////////////////////////////////////////////////MSY TEST////////////////////////////
 								/*	CvPoint   centerpointxy;
@@ -486,7 +520,7 @@ long int bool_max_connectivity_analyze2_1_OBJ()
 								}*/
 								}
 							
-						}
+						/*}*/
 					
 					}
 				}

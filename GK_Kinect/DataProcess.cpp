@@ -12,6 +12,7 @@
 #include "abc.h"
 #include <opencv/cv.h>
 #include <opencv/highgui.h>
+#include <stdio.h>  
 using namespace std;
 using namespace cv;
 
@@ -34,11 +35,40 @@ long int xx = 0;
 long int yy = 0;
 long int msy = 0;
 long int center_msy;//abc.h中返回的center,表示（x,y)那点对应在矩阵里的位置
+int pointx;
+int pointy;
 //const openni::DepthPixel* pDepth;
 IplImage *showxy_msy;
 IplImage *showxz_msy;
+//#define showphoto_msy//测试时显示连通域的部分,定义表示关闭,注释掉表示开启//开启时非常浪费时间,大约6ms处理一帧,关闭时只需0.5ms,定义在abc.h中
 
 ///////////////
+////mouse click
+void on_mouse(int event, int x, int y, int flags, void* ustc)
+{
+	CvFont font;
+	cvInitFont(&font, CV_FONT_HERSHEY_SIMPLEX, 0.5, 0.5, 0, 1, CV_AA);
+
+//	if (event == CV_EVENT_LBUTTONDOWN)
+	if (event == CV_EVENT_MOUSEMOVE)
+	{
+		//CvPoint pt = cvPoint(x, y);
+		//char temp[100];
+		//sprintf(temp, "(%d,%d)", pt.x, pt.y);
+		/*cvPutText(pOut02, temp, pt, &font, cvScalar(255, 255, 255, 0));
+		cvCircle(pOut02, pt, 2, cvScalar(255, 0, 0, 0), CV_FILLED, CV_AA, 0);*/
+		pointx = x; pointy = y;
+		//cvShowImage("win02", pOut02);
+
+
+
+	}
+}
+
+
+
+//////
+
 
 
 CDataProcess::CDataProcess()
@@ -134,20 +164,23 @@ static int a = 0;
 void CDataProcess::ProcessSrc(stWP_K_3D_Object* in3DObj)
 {
 	if (a == 0)
-	{
-		//cvNamedWindow("win02", 0);
+	{   
+#ifndef showphoto_msy
+			cvNamedWindow("win02", 0);
+#endif
 		CvSize size; //=  cvGetSize(BGR);//得到摄像头图像大小
 		size.height = 480;
 		size.width = 640;
 		
 		pOut02 = cvCreateImage(size, 8, 3);
 		//cvNamedWindow("pOut02", 0);
-      pOut01 = cvCreateImage(size, 8, 3);
+        pOut01 = cvCreateImage(size, 8, 3);
 		pCannyImg1 = cvCreateImage(size, 8, 3);
 
 		showxy_msy = cvCreateImage(size, 8, 3);
 		showxz_msy = cvCreateImage(size, 8, 3);
 		//cvNamedWindow("pOut01", 0);
+		cvSetMouseCallback("win02", on_mouse, NULL);
 		
 		a = 1;
 	}
@@ -158,9 +191,11 @@ void CDataProcess::ProcessSrc(stWP_K_3D_Object* in3DObj)
 	strTmp.Format(L"正在处理原始数据 a= %d", a);
 	PrintDis(strTmp);*/
 	///////////////////////////////////////////////
-	///////creat windows
+
 	
 
+	while (1)
+	{
 	    char key = 0;
 	    int i = 0, j = 0;
 		long int temp = 0;
@@ -187,43 +222,76 @@ void CDataProcess::ProcessSrc(stWP_K_3D_Object* in3DObj)
 			}
 		}
 		
-		//SYSTEMTIME sys1; GetLocalTime(&sys1);
-		//********************
-		//********************测试时间的起始点
-		LARGE_INTEGER Frequency, CountEnd, CountStart;
-		QueryPerformanceFrequency(&Frequency);
-		QueryPerformanceCounter(&CountStart);
-		double dfElapseMS = 0;
-		double dfElapseMS1 = 0;
-		double dfElapseMS2 = 0;
-		double dfElapseMS3 = 0;
-
-
-
-
-
-
-		bool_max_connectivity_analyze2_1_OBJ();
-
-		//****************************************************************************************************
-		QueryPerformanceCounter(&CountEnd);
-		dfElapseMS = (double)((double)(CountEnd.QuadPart - CountStart.QuadPart + 10) / (double)Frequency.QuadPart)*1000.0;
-		//****************************************************************************************************第一个时间节点
-
-
-
-
-
-       // SYSTEMTIME sys2; GetLocalTime(&sys2);
 		
-		CString s1;
-	
-		s1.Format(_T("%f"), dfElapseMS);
-		AfxMessageBox(s1);
-		
-		//cvShowImage("win02", pOut02);
-		//cvWaitKey(10);
 
+
+
+
+
+		
+
+
+			//********************
+			//********************测试时间的起始点
+			LARGE_INTEGER Frequency, CountEnd, CountStart;
+			QueryPerformanceFrequency(&Frequency);
+			QueryPerformanceCounter(&CountStart);
+			double dfElapseMS  = 0;
+			double dfElapseMS1 = 0;
+			double dfElapseMS2 = 0;
+			double dfElapseMS3 = 0;
+
+			bool_max_connectivity_analyze2_1_OBJ();
+
+			//****************************************************************************************************
+			QueryPerformanceCounter(&CountEnd);
+			dfElapseMS = (double)((double)(CountEnd.QuadPart - CountStart.QuadPart + 10) / (double)Frequency.QuadPart)*1000.0;
+			//****************************************************************************************************第一个时间节点
+
+			//**************************//mouse click
+
+
+			//////////////////////////////////////////////
+			/*示例：文本输出到单行控件*/
+			CString strTmp;
+			/*int a = 1;*/
+//			strTmp.Format(L"正在处理原始数据 time= %f", dfElapseMS);
+//			PrintDis(strTmp);
+			///////////////////////////////////////////////
+
+
+			//SYSTEMTIME sys2; GetLocalTime(&sys2);
+
+			/*	CString s1;
+
+				s1.Format(_T("%f"), dfElapseMS);
+				AfxMessageBox(s1);*/
+
+#ifndef showphoto_msy
+			cvShowImage("win02", pOut02);
+			//cvWaitKey(10);
+			if (cvWaitKey(20) == 'N')
+				return;
+
+
+
+#endif
+//			Sleep(100);
+		}
+
+
+
+
+
+
+
+
+
+
+
+
+
+//********************draw point in black picture
 	/*	int x, y;
 	
 		for (x = 0; x < 320 ; x++)
