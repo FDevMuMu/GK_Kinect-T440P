@@ -25,14 +25,15 @@ float AXc = 0, AYc = 0, Xc = 0, Yc = 0, weight_msy= 0;//////Ã¿¸öXÓë´ËµãÖÊÁ¿µÄ³Ë»
 extern long int center_msy;//abc.hÖĞ·µ»ØµÄcenter,±íÊ¾£¨x,y)ÄÇµã¶ÔÓ¦ÔÚ¾ØÕóÀïµÄÎ»ÖÃ
 //extern const openni::DepthPixel* pDepth;
 char str[50];
-extern int pointx;
+extern int pointx;//ÓÃÓÚ´æ´¢Êó±ê»ñµÃµÄ(x,y)×ø±ê
 extern int pointy;
 /////////////////////////////////MSY TEST////////////////////////////
 extern IplImage *showxy_msy;
 extern IplImage *showxz_msy;
 int pointxy = 1;
-//extern int showphoto_msy;
-//#define showphoto_msy//²âÊÔÊ±ÏÔÊ¾Á¬Í¨ÓòµÄ²¿·Ö,¶¨Òå±íÊ¾¹Ø±Õ,×¢ÊÍµô±íÊ¾¿ªÆô//¿ªÆôÊ±·Ç³£ÀË·ÑÊ±¼ä,´óÔ¼6ms´¦ÀíÒ»Ö¡,¹Ø±ÕÊ±Ö»Ğè0.5ms
+
+#define showphoto_msy//²âÊÔÊ±ÏÔÊ¾Á¬Í¨ÓòµÄ²¿·Ö,¶¨Òå±íÊ¾¹Ø±Õ,×¢ÊÍµô±íÊ¾¿ªÆô//¿ªÆôÊ±·Ç³£ÀË·ÑÊ±¼ä,´óÔ¼6ms´¦ÀíÒ»Ö¡,¹Ø±ÕÊ±Ö»Ğè0.5ms
+#define mousedebug //ÖØ¸´ÏÔÊ¾Ò»Ö¡Í¼Ïñ, Í¨¹ıÊó±ê»ñÈ¡ËùÖ¸Á¬Í¨ÓòµÄÈı¸öÉ¸Ñ¡Öµ(Ãæ»ı±È ³¤¿í±È ¾àÀëÓëÃæ»ıµÄ³Ë»ı) ×¢ÊÍµô±íÊ¾¿ªÆô
 void DrawPoint(int x, int y, unsigned char R, unsigned char G, unsigned char B, IplImage *img)
 {
 	if (x>img->width)		x = img->width;
@@ -108,20 +109,11 @@ void clean(IplImage *img)
 }
 
 
-int x=0, y=0;
-//VOID TEST()
-//{
-//	x++;
-//	if (x > 200)
-//		x = 0;
-//	DrawPoint(x, 100, 255, 0, 0, pOut02);
-//
-//}
+
 
 long int bool_max_connectivity_analyze2_1_OBJ()
 {
-	/*TEST();*/
-	/*return 1;*/
+	
 	long int center = 0;
 
 	register unsigned long int  boolset = 3000;//ãĞÖµ
@@ -130,10 +122,14 @@ long int bool_max_connectivity_analyze2_1_OBJ()
 
 
 	int Z_min_diff = Z_min_diff_set;//50;	//ÕâÊÇÒ»¸ö¿Éµ÷Öµ¹ØÏµµ½Éî¶ÈµÄ·Ö±æ´ÖÂÔ³Ì¶È
+#ifdef showphoto_msy
+	const char X_step = 2;		//ÏñËØµãµÄ²½³¤ ¸ôµãÉ¨Ãè ÓÃÓÚ¼õÉÙÔËËãÁ¿
+	const char Y_step = 2;		//ÏñËØµãµÄ²½³¤ ¸ôµãÉ¨Ãè ÓÃÓÚ¼õÉÙÔËËãÁ¿
+#endif
+#ifndef  showphoto_msy
 	const char X_step = 1;		//ÏñËØµãµÄ²½³¤ ¸ôµãÉ¨Ãè ÓÃÓÚ¼õÉÙÔËËãÁ¿
-	const char Y_step = 1;		//ÏñËØµãµÄ²½³¤ ¸ôµãÉ¨Ãè ÓÃÓÚ¼õÉÙÔËËãÁ¿
-
-
+	const char Y_step = 1;
+#endif
 	const int x320 = DEPTH_VISION_CAM_WIDTH;//320;//320;//´¦ÀíÍ¼ÏñÊı¾İµÄ´óĞ¡ÉèÖÃ  xÖµ±ØĞëºÍÔ­Êı¾İÏàÍ¬·ñÔò³öÏÖ ĞĞ´íÎó 
 	const int y240 = DEPTH_VISION_CAM_HEIGHT;//240;//240;//´¦ÀíÍ¼ÏñÊı¾İµÄ´óĞ¡ÉèÖÃ
 	const int datalong = DEPTH_VISION_CAM_WIDTH*DEPTH_VISION_CAM_HEIGHT;
@@ -350,16 +346,16 @@ long int bool_max_connectivity_analyze2_1_OBJ()
 
 			int t;
 			unsigned char R, G, B;
-
+#ifndef mousedebug
 			int maosdisplaynumber = -DepthBuf_O[pointy][pointx];
-
+#endif
 
 			if (1)//ËùÓĞÁ¬Í¨Óò Öğ¸öÏÔÊ¾
 			{
 				register int   min_x, max_x, min_y, max_y;
 				i = 1;
 #ifndef showphoto_msy
-					clean(pOut01);//ÇåÀíÁ½¸öÍ¼
+					//clean(pOut01);//ÇåÀíÁ½¸öÍ¼
 					clean(pOut02);
 					//////ÇåÀíÓÒÉÏ½ÇµÄºÚÍ¼
 					int x, y;
@@ -374,10 +370,6 @@ long int bool_max_connectivity_analyze2_1_OBJ()
 					}
 #endif
 			  /////////
-
-
-
-
 
 				for (j = 2; j <= connect_area_num; j++)//j Á¬Í¨ÓòµÄ¸öÊı
 				{
@@ -448,35 +440,33 @@ long int bool_max_connectivity_analyze2_1_OBJ()
 								//{	//Ô²µÄ³¤¿í±ÈÎª1  Ô²µÄÃæ»ıÓëÍâ½Ó×îĞ¡¾ØĞÍÃæ»ı±ÈÎª 2*r*2*r/Pi*r*r =4/pi 					
 								//cout << "³¤¿í±È" << P_xy << " Ãæ»ı±È" << P_area << " Êµ¼ÊÃæ»ı " << connect_area_s_e_w[j][2] * X_step*Y_step << "ÖĞĞÄµã¾àÀë" << DepthBuf_O_msy[(max_y + min_y)/2][(max_x + min_x) / 2] << endl;
 								/////////////////////////////////////////////////////ÒÔÉÏÄÚÈİÊä³ö³¤¿í±È£¬Ãæ»ı±È£¬Êµ¼ÊÃæ»ı£¬ÖĞĞÄ¾àÀë////////////////////////////
-							if (1)//j == maosdisplaynumber)
+#ifndef mousedebug
+							if (1)
 							{
+#endif
 								for (i = connect_area_s_e_w[j][0]; i < connect_area_s_e_w[j][1]; i++)
 								{
-
-
-									/*if (pointx<max_x&&pointx>min_x&&pointy<max_y&&pointy>min_y)
-									{*/
 #ifndef showphoto_msy
-										DrawPoint(area_grow_data_obj[i][1], area_grow_data_obj[i][0], R, G, 0, pOut02);//SetColor(y,x,cPoint);//²âÊÔ´úÂë
-										if (area_grow_data_obj[i][1] % 2 == 0 && area_grow_data_obj[i][0] % 2 == 0)
-										{
-											//dataShow[area_grow_data_obj[i][0] * 320 * 3 + area_grow_data_obj[i][1] * 3] = 0xff;
+									DrawPoint(area_grow_data_obj[i][1], area_grow_data_obj[i][0], R, G, 0, pOut02);//SetColor(y,x,cPoint);//²âÊÔ´úÂë
 
-											dataShow[((240 - area_grow_data_obj[i][0] / 2) * 320 + area_grow_data_obj[i][1] / 2) * 3] = R;
-											dataShow[((240 - area_grow_data_obj[i][0] / 2) * 320 + area_grow_data_obj[i][1] / 2) * 3 + 1] = G;
-											dataShow[((240 - area_grow_data_obj[i][0] / 2) * 320 + area_grow_data_obj[i][1] / 2) * 3 + 2] = B;
-										}
-#endif
+									if (area_grow_data_obj[i][1] % 2 == 0 && area_grow_data_obj[i][0] % 2 == 0)
+									{
+										//ÒòÎªÓÒÉÏ½ÇµÄÍ¼Ö»ÓĞ320*240, ËùÒÔ¸ôÒ»¸öµãÒ»»­Í¼
+										dataShow[((240 - area_grow_data_obj[i][0] / 2) * 320 + area_grow_data_obj[i][1] / 2) * 3] = R;
+										dataShow[((240 - area_grow_data_obj[i][0] / 2) * 320 + area_grow_data_obj[i][1] / 2) * 3 + 1] = G;
+										dataShow[((240 - area_grow_data_obj[i][0] / 2) * 320 + area_grow_data_obj[i][1] / 2) * 3 + 2] = B;
 									}
-
-
+#endif
 
 
 									center = (max_x + min_x) / 2 + (max_y + min_y) * 320;
-									/*}*/
-								/*}*/
+								}
+								
+#ifndef mousedebug
 							}
+#endif
 								///////////////////////////////°Ñ×ø±êµÈ±ê¼ÇÔÚÍ¼ÉÏMSY///////////////////////////////////////////
+#ifndef mousedebug
 							if (j == maosdisplaynumber)
 							{
 								CvFont font;
@@ -489,6 +479,7 @@ long int bool_max_connectivity_analyze2_1_OBJ()
 								sprintf(str, "  end  %f  ",  ((float)(weight_msy / (float)connect_area_s_e_w[j][2])*sqrt((connect_area_s_e_w[j][2] * X_step*Y_step))));// DepthBuf_O_msy[(int)Yc][(int)Xc]);
 								cvPutText(pOut02, str, cvPoint(min_x + 10, min_y + 50), &font, CV_RGB(255, 255, 255));
 							}
+#endif
 								//								sprintf(str, "  end  %f  ", weight_msy / (float)((float)connect_area_s_e_w[j][2])* sqrt((connect_area_s_e_w[j][2] * X_step*Y_step)));// DepthBuf_O_msy[(int)Yc][(int)Xc]);
 
 /*
@@ -581,18 +572,18 @@ long int bool_max_connectivity_analyze2_1_OBJ()
 
 
 			
-			if (0)// display_process_image == 1)//ÅĞ¶Ï ÏÔÊ¾¹ı³ÌÍ¼Ïñ	//ÏÔÊ¾×î´óÁ¬Í¨Óò
-			for (y = 0; y<DEPTH_VISION_CAM_HEIGHT; y++)
-			for (x = 0; x<DEPTH_VISION_CAM_WIDTH; x++)
-			{
-				if (DepthBuf_O[y][x] == 1)
-					DrawPoint(x, y, 0, 255, 255, pOut01);//SetColor(y,x,cPoint);//²âÊÔ´úÂë
-				else
-					DrawPoint(x, y, 0, 0, 0, pOut01);//SetColor(y,x,cPoint);//²âÊÔ´úÂë
+			//if (0)// display_process_image == 1)//ÅĞ¶Ï ÏÔÊ¾¹ı³ÌÍ¼Ïñ	//ÏÔÊ¾×î´óÁ¬Í¨Óò
+			//for (y = 0; y<DEPTH_VISION_CAM_HEIGHT; y++)
+			//for (x = 0; x<DEPTH_VISION_CAM_WIDTH; x++)
+			//{
+			//	if (DepthBuf_O[y][x] == 1)
+			//		DrawPoint(x, y, 0, 255, 255, pOut01);//SetColor(y,x,cPoint);//²âÊÔ´úÂë
+			//	else
+			//		DrawPoint(x, y, 0, 0, 0, pOut01);//SetColor(y,x,cPoint);//²âÊÔ´úÂë
 
-			}
+			//}
 
-			//			cvShowImage("win01", pOut01);
+			////			cvShowImage("win01", pOut01);
 			return center;
 
 		}
