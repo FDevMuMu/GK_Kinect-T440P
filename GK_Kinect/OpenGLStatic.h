@@ -69,6 +69,9 @@ public:
 
 	//ÎÄ×ÖÏÔÊ¾
 
+	//»­¹ì¼£
+	st_trPoint arTrack[100];
+	int nTrack;
 
 	float m_fMarkK;
 

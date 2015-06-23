@@ -69,6 +69,8 @@ COpenGLStatic::COpenGLStatic()
 	m_fX_Fix = 0.0;
 	m_fY_Fix = -1.0;
 	m_fZ_Fix = 0.0;
+
+	nTrack = 0;
 }
 
 COpenGLStatic::~COpenGLStatic()
@@ -251,6 +253,33 @@ void COpenGLStatic::OnPaint()
 			glTranslatef(-m_arMarkCylinder[i].x,-m_arMarkCylinder[i].y,-m_arMarkCylinder[i].z);
 		}
 	}
+	//////////////////////
+	//画轨迹线
+	if (nTrack > 1 )
+	{
+		glLineWidth(10.0f);
+		glColor3f(1.0f, 0.0f, 1.0f);
+		for (int i = 1; i < nTrack; i++)
+		{
+			GlDrawLine(arTrack[i - 1].x, arTrack[i - 1].y, arTrack[i - 1].z, arTrack[i].x, arTrack[i].y, arTrack[i].z);
+		}
+
+		glPointSize(12);
+		trPoint tdPoint;
+		glBegin(GL_POINTS);
+		for (int i = 0; i < nTrack; i++)
+		{
+			glColor3f(0.0f,1.0f,0.0f);
+
+			tdPoint.x = arTrack[i].x;
+			tdPoint.y = arTrack[i].y;
+			tdPoint.z = arTrack[i].z;
+			glVertex3f(tdPoint.x*m_fK, tdPoint.y*m_fK, tdPoint.z*m_fK);
+		}
+		glEnd();
+	}
+	
+
 	//////////////////////////////////////////////////////////////
 	//画立方体线框（连通域对象）
 	//if (pDataHolder != NULL)

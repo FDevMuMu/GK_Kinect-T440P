@@ -158,6 +158,11 @@ UINT CRobotCore::PointCloudsThread(LPVOID pParam)
 
 void CRobotCore::m_ProcessOneFrame()
 {
+
+	//¿½±´¹ì¼£Êý¾Ý
+	memcpy(pGL->arTrack, m_DataProcess.arTrack, 100 * sizeof(st_trPoint));
+	pGL->nTrack = m_DataProcess.nTrack;
+
 	m_cDepthTo3D.b3DObjProcessing = true;
 	m_cDepthTo3D.csSrc3DObject.Lock();
 	

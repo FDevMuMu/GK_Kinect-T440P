@@ -16,5 +16,10 @@ public:
 	void PrintList(CString inStr);
 	void PrintDis(CString inStr);
 	void DisplayPic(CStatic *inDis);
+
+	//»­¹ì¼£
+	st_trPoint arTrack[100];
+	int nTrack;
+
 };
 

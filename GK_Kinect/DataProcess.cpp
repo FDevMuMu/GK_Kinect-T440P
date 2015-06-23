@@ -42,8 +42,9 @@ IplImage *showxy_msy;
 IplImage *showxz_msy;
 //////不要在这个cpp里修改//////#define showphoto_msy//测试时显示连通域的部分,定义表示关闭,注释掉表示开启//开启时非常浪费时间,大约6ms处理一帧,关闭时只需0.5ms,定义在abc.h中 
 //////不要在这个cpp里修改//////#define mousedebug //重复显示一帧图像, 通过鼠标获取所指连通域的三个筛选值(面积比 长宽比 距离与面积的乘积) 注释掉表示开启 ,定义在abc.h中
+//////不要在这个cpp里修改//////#define Screenball //是否增加筛选球的一部 注释掉表示开启,筛选不要和鼠标同时开启,定义在abc.h中
 
-//#define measuretime //测连通域时间,显示在下方文本中 注释掉表示开启, 注意测时程序不能和鼠标程序同时开启
+#define measuretime //测连通域时间,显示在下方文本中 注释掉表示开启, 注意测时程序不能和鼠标程序同时开启
 
 ///////////////
 ////mouse click
@@ -80,6 +81,8 @@ CDataProcess::CDataProcess()
 	bih.biHeight = 240;
 	bih.biPlanes = 1;
 	bih.biBitCount = 24;
+
+	nTrack = 0;
 }
 
 
@@ -158,7 +161,7 @@ unsigned char B[DEPTH_WIDTH][DEPTH_HEIGHT];	//三维坐标点对应的彩色数据的蓝色分量
 
 static int initializephoto = 0;
 
-
+static int drawtrack = 0;
 void CDataProcess::ProcessSrc(stWP_K_3D_Object* in3DObj)
 {
 	if (initializephoto == 0)//对图片的初始化只执行一次, 因为这个函数一帧一调用, 所以调用第一次后a设为1
@@ -232,17 +235,14 @@ void CDataProcess::ProcessSrc(stWP_K_3D_Object* in3DObj)
 			double dfElapseMS3 = 0;
 #endif
 
-
-			bool_max_connectivity_analyze2_1_OBJ();
+			ballReturnValue ball;
+			bool_max_connectivity_analyze2_1_OBJ(&ball);
+			
 #ifndef measuretime	
 			//****************************************************************************************************
 			QueryPerformanceCounter(&CountEnd);
 			dfElapseMS = (double)((double)(CountEnd.QuadPart - CountStart.QuadPart + 10) / (double)Frequency.QuadPart)*1000.0;
 			//****************************************************************************************************第一个时间节点
-
-			
-
-
 			//////////////////////////////////////////////测试连通域计算的时间并输出在下方文本框中
 			CString strTmp;
 			strTmp.Format(L"正在处理原始数据 time= %f", dfElapseMS);
@@ -264,11 +264,12 @@ void CDataProcess::ProcessSrc(stWP_K_3D_Object* in3DObj)
 		}
 #endif
 
-
-
-
-
-
+//*******************画轨迹
+	arTrack[drawtrack].x = ball.x;
+	arTrack[drawtrack].y = ball.y;
+	arTrack[drawtrack].z = ball.z;
+	drawtrack++;
+	nTrack = drawtrack+1;
 
 
 
