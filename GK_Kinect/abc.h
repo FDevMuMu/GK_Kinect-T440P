@@ -32,9 +32,9 @@ extern IplImage *showxy_msy;
 extern IplImage *showxz_msy;
 int pointxy = 1;
 
-#define showphoto_msy//测试时显示连通域的部分,定义表示关闭,注释掉表示开启//开启时非常浪费时间,大约6ms处理一帧,关闭时只需0.5ms
-#define mousedebug //重复显示一帧图像, 通过鼠标获取所指连通域的三个筛选值(面积比 长宽比 距离与面积的乘积) 注释掉表示开启
-#define Screenball //是否增加筛选球的一部 注释掉表示开启,筛选不要和鼠标同时开启
+//#define showphoto_msy//测试时显示连通域的部分,定义表示关闭,注释掉表示关闭//开启时非常浪费时间,大约6ms处理一帧,关闭时只需0.5ms
+//#define mousedebug //重复显示一帧图像, 通过鼠标获取所指连通域的三个筛选值(面积比 长宽比 距离与面积的乘积) 注释掉表示关闭
+#define Screenball //是否增加筛选球的一部 注释掉表示关闭,筛选不要和鼠标同时开启
 void DrawPoint(int x, int y, unsigned char R, unsigned char G, unsigned char B, IplImage *img)
 {
 	if (x>img->width)		x = img->width;
@@ -113,7 +113,7 @@ class ballReturnValue
 public:
     float x;
 	float y;
-	long int z;
+	long  int z;
 	
 };
 
@@ -130,14 +130,14 @@ long int bool_max_connectivity_analyze2_1_OBJ(ballReturnValue *ballRV)
 
 
 	int Z_min_diff = Z_min_diff_set;//50;	//这是一个可调值关系到深度的分辨粗略程度
-#ifdef showphoto_msy
-	const char X_step = 2;		//像素点的步长 隔点扫描 用于减少运算量
-	const char Y_step = 2;		//像素点的步长 隔点扫描 用于减少运算量
-#endif
-#ifndef  showphoto_msy
+//#ifdef showphoto_msy
+//	const char X_step = 2;		//像素点的步长 隔点扫描 用于减少运算量
+//	const char Y_step = 2;		//像素点的步长 隔点扫描 用于减少运算量
+//#endif
+
 	const char X_step = 1;		//像素点的步长 隔点扫描 用于减少运算量
 	const char Y_step = 1;
-#endif
+
 	const int x320 = DEPTH_VISION_CAM_WIDTH;//320;//320;//处理图像数据的大小设置  x值必须和原数据相同否则出现 行错误 
 	const int y240 = DEPTH_VISION_CAM_HEIGHT;//240;//240;//处理图像数据的大小设置
 	const int datalong = DEPTH_VISION_CAM_WIDTH*DEPTH_VISION_CAM_HEIGHT;
@@ -354,7 +354,7 @@ long int bool_max_connectivity_analyze2_1_OBJ(ballReturnValue *ballRV)
 
 			int t;
 			unsigned char R, G, B;
-#ifndef mousedebug
+#ifdef mousedebug
 			int maosdisplaynumber = -DepthBuf_O[pointy][pointx];
 #endif
 
@@ -362,7 +362,7 @@ long int bool_max_connectivity_analyze2_1_OBJ(ballReturnValue *ballRV)
 			{
 				register int   min_x, max_x, min_y, max_y;
 				i = 1;
-#ifndef showphoto_msy
+#ifdef showphoto_msy
 					//clean(pOut01);//清理两个图
 					clean(pOut02);
 					//////清理右上角的黑图
@@ -444,19 +444,19 @@ long int bool_max_connectivity_analyze2_1_OBJ(ballReturnValue *ballRV)
 							//if ((fabs(P_xy - 1) < 1 * 0.15) && (fabs(P_area - 0.7854) < 0.7854*0.15) && (((float)(weight_msy / (float)connect_area_s_e_w[j][2])*sqrt((connect_area_s_e_w[j][2] * X_step*Y_step))) > 90000) && (((float)(weight_msy / (float)connect_area_s_e_w[j][2])*sqrt((connect_area_s_e_w[j][2] * X_step*Y_step))) < 110000))
 							//	if ((fabs(P_xy - 1) < 1 * 0.15) && (fabs(P_area - 0.7854) < 0.7854*0.15) )//&& (((float)(weight_msy / (float)connect_area_s_e_w[j][2])*sqrt((connect_area_s_e_w[j][2] * X_step*Y_step))) > 90000) && (((float)(weight_msy / (float)connect_area_s_e_w[j][2])*sqrt((connect_area_s_e_w[j][2] * X_step*Y_step))) < 110000))
 							//if (fabs(P_xy - 1) < 1 * 0.15) && (fabs(P_area - 0.7854) < 0.7854*0.15))//&& (((float)(weight_msy / (float)connect_area_s_e_w[j][2])*sqrt((connect_area_s_e_w[j][2] * X_step*Y_step))) > 90000) && (((float)(weight_msy / (float)connect_area_s_e_w[j][2])*sqrt((connect_area_s_e_w[j][2] * X_step*Y_step))) < 110000))
-#ifndef Screenball
+#ifdef Screenball
 							if ((fabs(P_xy - 1) < 1 * 0.21) && (fabs(P_area - 0.7854) < 0.7854*0.23) && (((float)(weight_msy / (float)connect_area_s_e_w[j][2])*sqrt((connect_area_s_e_w[j][2] * X_step*Y_step))) > 57000) && (((float)(weight_msy / (float)connect_area_s_e_w[j][2])*sqrt((connect_area_s_e_w[j][2] * X_step*Y_step))) < 73000))
 							{	//圆的长宽比为1  圆的面积与外接最小矩型面积比为 2*r*2*r/Pi*r*r =4/pi 	
 #endif
 								//cout << "长宽比" << P_xy << " 面积比" << P_area << " 实际面积 " << connect_area_s_e_w[j][2] * X_step*Y_step << "中心点距离" << DepthBuf_O_msy[(max_y + min_y)/2][(max_x + min_x) / 2] << endl;
 								/////////////////////////////////////////////////////以上内容输出长宽比，面积比，实际面积，中心距离////////////////////////////
-#ifndef mousedebug
+#ifdef mousedebug
 								if (1)
 								{
 #endif
 									for (i = connect_area_s_e_w[j][0]; i < connect_area_s_e_w[j][1]; i++)
 									{
-#ifndef showphoto_msy
+#ifdef showphoto_msy
 										DrawPoint(area_grow_data_obj[i][1], area_grow_data_obj[i][0], R, G, 0, pOut02);//SetColor(y,x,cPoint);//测试代码
 
 										if (area_grow_data_obj[i][1] % 2 == 0 && area_grow_data_obj[i][0] % 2 == 0)
@@ -474,14 +474,14 @@ long int bool_max_connectivity_analyze2_1_OBJ(ballReturnValue *ballRV)
 										//center = DepthBuf_O_msy[(int)Yc][(int)Xc];
 									}
 
-#ifndef mousedebug
+#ifdef mousedebug
 								}
 #endif
-#ifndef Screenball
+#ifdef Screenball
 							}
 #endif
 								///////////////////////////////把坐标等标记在图上MSY///////////////////////////////////////////
-#ifndef mousedebug
+#ifdef mousedebug
 							if (j == maosdisplaynumber)
 							{
 								CvFont font;
