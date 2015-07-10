@@ -388,7 +388,7 @@ long int bool_max_connectivity_analyze2_1_OBJ(ballReturnValue *ballRV)
 					{
 						//	if ((connect_area_s_e_w[j][1] - connect_area_s_e_w[j][0])> 100 && (connect_area_s_e_w[j][1] - connect_area_s_e_w[j][0])<3300)
 						//if ((connect_area_s_e_w[j][1] - connect_area_s_e_w[j][0]) > 100 && (connect_area_s_e_w[j][1] - connect_area_s_e_w[j][0]) < 3300)
-							if ((connect_area_s_e_w[j][1] - connect_area_s_e_w[j][0]) > 60 && (connect_area_s_e_w[j][1] - connect_area_s_e_w[j][0]) <3300)
+							if ((connect_area_s_e_w[j][1] - connect_area_s_e_w[j][0]) > 70 && (connect_area_s_e_w[j][1] - connect_area_s_e_w[j][0]) <3300)
 							//联通域大小筛选   100<  <3300
 						{	////////此处参数可调(联通)
 
@@ -445,7 +445,7 @@ long int bool_max_connectivity_analyze2_1_OBJ(ballReturnValue *ballRV)
 							//	if ((fabs(P_xy - 1) < 1 * 0.15) && (fabs(P_area - 0.7854) < 0.7854*0.15) )//&& (((float)(weight_msy / (float)connect_area_s_e_w[j][2])*sqrt((connect_area_s_e_w[j][2] * X_step*Y_step))) > 90000) && (((float)(weight_msy / (float)connect_area_s_e_w[j][2])*sqrt((connect_area_s_e_w[j][2] * X_step*Y_step))) < 110000))
 							//if (fabs(P_xy - 1) < 1 * 0.15) && (fabs(P_area - 0.7854) < 0.7854*0.15))//&& (((float)(weight_msy / (float)connect_area_s_e_w[j][2])*sqrt((connect_area_s_e_w[j][2] * X_step*Y_step))) > 90000) && (((float)(weight_msy / (float)connect_area_s_e_w[j][2])*sqrt((connect_area_s_e_w[j][2] * X_step*Y_step))) < 110000))
 #ifdef Screenball
-							if ((fabs(P_xy - 1) < 1 * 0.21) && (fabs(P_area - 0.7854) < 0.7854*0.23) && (((float)(weight_msy / (float)connect_area_s_e_w[j][2])*sqrt((connect_area_s_e_w[j][2] * X_step*Y_step))) > 57000) && (((float)(weight_msy / (float)connect_area_s_e_w[j][2])*sqrt((connect_area_s_e_w[j][2] * X_step*Y_step))) < 73000))
+							if ((fabs(P_xy - 1) < 1 * 0.18) && (fabs(P_area - 0.7854) < 0.7854*0.18) && (((float)(weight_msy / (float)connect_area_s_e_w[j][2])*sqrt((connect_area_s_e_w[j][2] * X_step*Y_step))) > 57000) && (((float)(weight_msy / (float)connect_area_s_e_w[j][2])*sqrt((connect_area_s_e_w[j][2] * X_step*Y_step))) < 73000))
 							{	//圆的长宽比为1  圆的面积与外接最小矩型面积比为 2*r*2*r/Pi*r*r =4/pi 	
 #endif
 								//cout << "长宽比" << P_xy << " 面积比" << P_area << " 实际面积 " << connect_area_s_e_w[j][2] * X_step*Y_step << "中心点距离" << DepthBuf_O_msy[(max_y + min_y)/2][(max_x + min_x) / 2] << endl;

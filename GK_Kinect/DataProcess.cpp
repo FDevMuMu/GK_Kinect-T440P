@@ -43,7 +43,7 @@ IplImage *showxz_msy;
 //////不要在这个cpp里修改//////#define showphoto_msy//测试时显示连通域的部分,定义表示关闭,注释掉表示关闭//开启时非常浪费时间,大约6ms处理一帧,关闭时只需0.5ms,定义在abc.h中 
 //////不要在这个cpp里修改//////#define mousedebug //重复显示一帧图像, 通过鼠标获取所指连通域的三个筛选值(面积比 长宽比 距离与面积的乘积) 注释掉表示关闭 ,定义在abc.h中
 //////不要在这个cpp里修改//////#define Screenball //是否增加筛选球的一部 注释掉表示关闭,筛选不要和鼠标同时开启,定义在abc.h中
-
+#define printposition//MFC右下角显示识别球状态的信息,开启时有时候帧率过高会崩
 //#define measuretime //测连通域时间,显示在下方文本中 注释掉表示关闭, 注意测时程序不能和鼠标程序同时开启
 
 ///////////////
@@ -327,35 +327,39 @@ void CDataProcess::ProcessTransfom(stWP_K_3D_Object* in3DObj)
 #ifdef mousedebug
 	}
 #endif
-    ////*******************画轨迹
+
+#ifdef Screenball
+	////*******************画轨迹
 	if (ball.x > 0 && ball.y > 0)
 	{
-	
-	//arTrack[drawtrack].x = ball.x;//两坐标系里y,z意义不同
-	//arTrack[drawtrack].y = ball.z;
-	//arTrack[drawtrack].z = ball.y;
-	int nBallx = ball.x;
-	int nBally = ball.y;
-	arTrack[drawtrack].x = in3DObj->x[nBallx][nBally];//两坐标系里y,z意义不同
-	arTrack[drawtrack].y = in3DObj->y[nBallx][nBally];
-	arTrack[drawtrack].z = in3DObj->z[nBallx][nBally];
 
-	CString strInfo;
-	strInfo.Format(L"arTrack[%d] = (%.2f , %.2f , %.2f)", drawtrack, arTrack[drawtrack].x, arTrack[drawtrack].y, arTrack[drawtrack].z);
-	PrintList(strInfo);
+		//arTrack[drawtrack].x = ball.x;//两坐标系里y,z意义不同
+		//arTrack[drawtrack].y = ball.z;
+		//arTrack[drawtrack].z = ball.y;
+		int nBallx = ball.x;
+		int nBally = ball.y;
+		arTrack[drawtrack].x = in3DObj->x[nBallx][nBally];//两坐标系里y,z意义不同
+		arTrack[drawtrack].y = in3DObj->y[nBallx][nBally];
+		arTrack[drawtrack].z = in3DObj->z[nBallx][nBally];
 
-	drawtrack++;
-	nTrack = drawtrack;
+		CString strInfo;
+#ifdef printposition
+		strInfo.Format(L"arTrack[%d] = (%.2f , %.2f , %.2f)", drawtrack, arTrack[drawtrack].x, arTrack[drawtrack].y, arTrack[drawtrack].z);
+		PrintList(strInfo);
+#endif
+
+		drawtrack++;
+		nTrack = drawtrack;
 	}
 	else
 	{
 
-		
+
 		PrintList(L"看不到球");
-		
+
 	}
 
-
+#endif
 
 
 	//********************draw point in black picture
@@ -372,4 +376,4 @@ void CDataProcess::ProcessTransfom(stWP_K_3D_Object* in3DObj)
 	}*/
 
 
-}
+	}
